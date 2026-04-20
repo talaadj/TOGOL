@@ -1,0 +1,88 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,700;0,900;1,700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Playfair Display", serif;
+  
+  /* Modern clean palette */
+  --color-brand-900: #0a0a0a;
+  --color-brand-800: #1a1a1a;
+  --color-brand-100: #f5f5f5;
+  --color-accent: #c5a059;
+  --color-border: #e2e2e2;
+  --color-text-dim: #737373;
+
+  /* Legacy for internal logic if any */
+  --color-celestial-900: #fcfcfc;
+}
+
+@layer base {
+  body {
+    @apply font-sans bg-white text-brand-900 antialiased;
+  }
+}
+
+@layer utilities {
+  .calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    @apply border-l border-t border-border bg-white;
+  }
+
+  .calendar-cell {
+    @apply border-r border-b border-border min-h-[80px] md:min-h-[140px] p-2 md:p-4 transition-all duration-200 cursor-pointer overflow-hidden relative;
+  }
+
+  .calendar-cell:hover {
+    @apply bg-brand-100/50;
+  }
+
+  .calendar-cell.today {
+    @apply bg-brand-900 text-white;
+  }
+  
+  .calendar-cell.today .cell-text-dim {
+    @apply text-white/50;
+  }
+
+  .calendar-cell.inactive {
+    @apply text-text-dim/30 bg-brand-100/20 cursor-default hover:bg-brand-100/20;
+  }
+
+  .cell-text-dim {
+    @apply text-text-dim text-[10px] md:text-[11px] uppercase tracking-widest font-medium;
+  }
+
+  .sidebar-panel {
+    @apply bg-white border-b md:border-b-0 md:border-r border-border h-auto md:h-full flex flex-col p-6 md:p-8 overflow-y-auto;
+  }
+
+  .nav-item {
+    @apply px-3 md:px-4 py-2 text-xs md:text-sm font-medium transition-all relative text-text-dim/60 hover:text-brand-900;
+  }
+
+  .nav-item.active {
+    @apply text-brand-900 font-bold;
+  }
+
+  .nav-item.active::after {
+    content: '';
+    @apply absolute -bottom-4 left-0 right-0 h-1 bg-accent;
+  }
+
+  .stat-card {
+    @apply p-4 md:p-6 border border-border rounded-xl transition-all hover:border-accent/40;
+  }
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-border rounded-full hover:bg-brand-900/10;
+}
