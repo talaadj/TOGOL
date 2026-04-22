@@ -50,11 +50,42 @@ async function startServer() {
         pressure: data.main.pressure,
         city: data.name,
         description: data.weather[0].description,
-        icon: data.weather[0].icon
+        icon: data.weather[0].icon,
+        windSpeed: data.wind?.speed,
+        conditionId: data.weather[0].id
       });
     } catch (error) {
       console.error("Error fetching weather:", error);
       res.status(500).json({ error: "Failed to fetch live weather data" });
+    }
+  });
+
+  // API Route for weather forecast
+  app.get("/api/weather/forecast", async (req, res) => {
+    const { lat, lon } = req.query;
+    const apiKey = process.env.OPENWEATHER_API_KEY;
+
+    if (!apiKey) {
+      return res.status(500).json({ error: "OPENWEATHER_API_KEY is not configured" });
+    }
+
+    const latitude = lat || "42.8746";
+    const longitude = lon || "74.5698";
+
+    try {
+      const response = await fetch(
+        `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=metric&lang=ru`
+      );
+      
+      if (!response.ok) {
+        throw new Error(`Weather Forecast API error: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      res.json(data);
+    } catch (error) {
+      console.error("Error fetching forecast:", error);
+      res.status(500).json({ error: "Failed to fetch weather forecast data" });
     }
   });
 
